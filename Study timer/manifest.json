@@ -1,0 +1,20 @@
+{
+    "name": "Study Timer Extension",
+    "version": "1.0.0",
+    "description": "A simple study timer extension",
+    "manifest_version": 3,
+    "author": "D4rkisek",
+    "permissions": [],
+
+    "action": {
+
+        "default_popup": "popup.html",
+        "default_title": "Study Timer Extension"
+    },
+    
+    "icons": {
+        "16": "icon-16.png",
+        "48": "icon-48.png",
+        "128": "icon-128.png"
+    }
+}
