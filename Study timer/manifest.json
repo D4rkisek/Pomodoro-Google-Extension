@@ -4,13 +4,32 @@
     "description": "A simple study timer extension",
     "manifest_version": 3,
     "author": "D4rkisek",
-    "permissions": [],
+
+    "content_scripts": [
+		{
+
+			"matches": ["<all_urls>"],
+
+			"js": ["popup.js"],
+			"default_title": "Study Timer Extension"
+		}
+	],
+
+    "background": {
+        "service_worker": "background.js"
+    },
 
     "action": {
-
         "default_popup": "popup.html",
         "default_title": "Study Timer Extension"
     },
+
+    "permissions": [
+		"tabs",
+		"activeTab",
+		"notifications",
+		"storage"
+	],
     
     "icons": {
         "16": "icon-16.png",
