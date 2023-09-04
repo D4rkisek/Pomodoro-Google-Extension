@@ -1,49 +1,25 @@
-let timerId;
-let timeLeft = 25 * 60; // Initial time: 25 minutes (work interval)
-let isTimerRunning = false;
-let isWorkInterval = true;
+chrome.alarms.create("studyTimer", {
+    periodInMinutes: 1/60, // One second
+})
 
-function startTimer() {
-  if (!isTimerRunning) {
-    isTimerRunning = true;
-    timerId = setInterval(() => {
-      if (timeLeft > 0) {
-        timeLeft--;
-      } else {
-        clearInterval(timerId);
-        isTimerRunning = false;
-        chrome.notifications.create({
-          type: 'basic',
-          iconUrl: 'icon.png', // Replace with the path to your extension's icon
-          title: 'Timer Finished',
-          message: isWorkInterval ? 'Time for a break!' : 'Back to work!',
-        });
-
-        if (isWorkInterval) {
-          timeLeft = 5 * 60; // 5 minutes break interval
-          isWorkInterval = false;
-        } else {
-          timeLeft = 25 * 60; // 25 minutes work interval
-          isWorkInterval = true;
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "studyTimer"){
+      chrome.storage.local.get(["timer", "isRunning"], (res) => {
+        if (res.isRunning){
+          let timer = res.timer + 1
+          console.log(timer)
+          chrome.storage.local.set({
+            timer,
+          })
         }
-      }
-    }, 1000);
+      })
   }
-}
+})
 
-function stopTimer() {
-  if (isTimerRunning) {
-    clearInterval(timerId);
-    isTimerRunning = false;
-    timeLeft = isWorkInterval ? 25 * 60 : 5 * 60; // Reset time based on the interval
-  }
-}
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'startTimer') {
-    startTimer();
-  } else if (request.action === 'stopTimer') {
-    stopTimer();
-  }
-});
+chrome.storage.local.get(["timer", "isRunning"], (res) => {
+  chrome.storage.local.set({
+    timer: "timer" in res ? res.timer: 0,
+    isRunning: "isRunning" in res ? res.isRunning : false
+  })
+})
 
